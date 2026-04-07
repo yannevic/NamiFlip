@@ -1,1 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: transparent;
+  color: white;
+}
+
+#root {
+  background-color: #030712;
+  min-height: 100vh;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Ondas animadas no fundo */
+@keyframes wave {
+  0% { transform: translateX(0) translateZ(0) scaleY(1); }
+  50% { transform: translateX(-25%) translateZ(0) scaleY(0.8); }
+  100% { transform: translateX(-50%) translateZ(0) scaleY(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.wave-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wave-bg::before,
+.wave-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: 0;
+  width: 200%;
+  height: 200px;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.wave-bg::before {
+  bottom: 5%;
+  animation: wave 8s linear infinite;
+  opacity: 0.6;
+}
+
+.wave-bg::after {
+  bottom: 0%;
+  animation: wave 12s linear infinite reverse;
+  opacity: 0.3;
+}
+
+/* Carta flip 3D */
+.carta-container {
+  perspective: 1000px;
+}
+
+.carta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.carta-inner.virada {
+  transform: rotateY(180deg);
+}
+
+.carta-frente,
+.carta-verso {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.carta-verso {
+  transform: rotateY(180deg);
+}
+
+/* Glow azul */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.2);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.4), 0 0 40px rgba(34, 197, 94, 0.1);
+}
+
+/* Texto gradiente */
+.text-gradient {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #60a5fa);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(110vh) scale(0.8);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 0.6; }
+  100% {
+    transform: translateY(-10vh) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.bubble {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.3),
+    rgba(96, 165, 250, 0.15) 30%,
+    rgba(167, 139, 250, 0.1) 60%,
+    transparent 70%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: rise linear infinite;
+  will-change: transform;
+  backdrop-filter: blur(1px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 3px; }
+
+.conteudo-app * {
+  pointer-events: auto;
+}

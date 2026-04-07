@@ -1,29 +1,24 @@
 import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 const SERVER_URL = 'http://localhost:3001';
 
+// Socket criado UMA vez, fora do hook
+const socket = io(SERVER_URL, { autoConnect: true });
+
 export default function useSocket() {
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [conectado, setConectado] = useState(false);
+  const [conectado, setConectado] = useState(socket.connected);
 
   useEffect(() => {
-    const s = io(SERVER_URL);
+    function onConnect() { setConectado(true); }
+    function onDisconnect() { setConectado(false); }
 
-    s.on('connect', () => {
-      console.log('🌊 Conectado ao servidor:', s.id);
-      setConectado(true);
-    });
-
-    s.on('disconnect', () => {
-      console.log('🌊 Desconectado do servidor');
-      setConectado(false);
-    });
-
-    setSocket(s);
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
 
     return () => {
-      s.disconnect();
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
     };
   }, []);
 
