@@ -117,7 +117,14 @@ function desenharBolha(ctx: CanvasRenderingContext2D, b: Bolha) {
 
   const reflexo2X = x + r * 0.2;
   const reflexo2Y = y + r * 0.55;
-  const reflexo2 = ctx.createRadialGradient(reflexo2X, reflexo2Y, 0, reflexo2X, reflexo2Y, r * 0.35);
+  const reflexo2 = ctx.createRadialGradient(
+    reflexo2X,
+    reflexo2Y,
+    0,
+    reflexo2X,
+    reflexo2Y,
+    r * 0.35
+  );
   reflexo2.addColorStop(0, `hsla(${(hue + 180) % 360}, 80%, 90%, ${opacity * 0.25})`);
   reflexo2.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.save();
@@ -248,7 +255,7 @@ export default function Bolhas() {
     const sprays: Spray[] = [];
 
     function emCimaDeBolha(mx: number, my: number): boolean {
-      return bolhas.some(b => {
+      return bolhas.some((b) => {
         const dx = mx - b.x;
         const dy = my - b.y;
         return Math.sqrt(dx * dx + dy * dy) < b.r;
@@ -285,7 +292,8 @@ export default function Bolhas() {
       }
     }
 
-    canvas.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
+
     canvas.addEventListener('click', handleClick);
 
     function draw() {
@@ -318,7 +326,7 @@ export default function Bolhas() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('click', handleClick);
     };
   }, []);
