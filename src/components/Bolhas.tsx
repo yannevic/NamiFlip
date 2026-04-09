@@ -293,8 +293,7 @@ export default function Bolhas() {
     }
 
     window.addEventListener('mousemove', handleMouseMove);
-
-    canvas.addEventListener('click', handleClick);
+    window.addEventListener('click', handleClick);
 
     function draw() {
       if (!ctx) return;
@@ -327,15 +326,15 @@ export default function Bolhas() {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('click', handleClick);
+      window.removeEventListener('click', handleClick);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 bolhas-canvas"
-      style={{ pointerEvents: 'none' }}
+      className="fixed inset-0"
+      style={{ zIndex: 1, pointerEvents: 'none' }}
     />
   );
 }
