@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../hooks/useSocket';
 
-
 export default function Home() {
   const { socket, conectado } = useSocket();
   const navigate = useNavigate();
@@ -13,7 +12,10 @@ export default function Home() {
   const [carregando, setCarregando] = useState(false);
 
   function handleCriarSala() {
-    if (!apelido.trim()) { setErro('Digite um apelido antes de continuar.'); return; }
+    if (!apelido.trim()) {
+      setErro('Digite um apelido antes de continuar.');
+      return;
+    }
     if (!socket) return;
     setErro('');
     setCarregando(true);
@@ -25,8 +27,14 @@ export default function Home() {
   }
 
   function handleEntrarSala() {
-    if (!apelido.trim()) { setErro('Digite um apelido antes de continuar.'); return; }
-    if (!codigo.trim()) { setErro('Digite o código da sala.'); return; }
+    if (!apelido.trim()) {
+      setErro('Digite um apelido antes de continuar.');
+      return;
+    }
+    if (!codigo.trim()) {
+      setErro('Digite o código da sala.');
+      return;
+    }
     if (!socket) return;
     setErro('');
     setCarregando(true);
@@ -43,30 +51,16 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-transparent text-white flex items-center justify-center p-4 relative overflow-hidden">
-     
-
       <div className="flex flex-col items-center gap-8 w-full max-w-sm relative z-10">
-
         {/* Logo */}
         <div className="flex flex-col items-center gap-3">
-          <div className="text-6xl" style={{ animation: 'float 3s ease-in-out infinite' }}>🌊</div>
           <h1 className="text-5xl font-black text-gradient" style={{ fontFamily: 'Cinzel, serif' }}>
             NamiFlip
           </h1>
-          <p className="text-gray-400 text-sm tracking-wider uppercase">
-            Jogo da memória · League of Legends
-          </p>
-          <span className="text-xs mt-1">
-            {conectado
-              ? <span className="text-green-400">🟢 online</span>
-              : <span className="text-red-400">🔴 offline</span>
-            }
-          </span>
         </div>
 
         {/* Card principal */}
         <div className="w-full bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 flex flex-col gap-5">
-
           {/* Apelido */}
           <div className="flex flex-col gap-2">
             <label className="text-xs text-gray-400 uppercase tracking-wider">Seu apelido</label>
@@ -126,10 +120,6 @@ export default function Home() {
             </p>
           )}
         </div>
-
-        <p className="text-gray-700 text-xs">
-          Sem cadastro · 2 jogadores · multiplayer em tempo real
-        </p>
       </div>
     </div>
   );
