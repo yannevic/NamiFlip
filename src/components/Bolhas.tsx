@@ -156,7 +156,6 @@ function atualizarDesenharSpray(ctx: CanvasRenderingContext2D, spray: Spray): bo
   spray.t = Math.min(spray.t + 0.045, 1);
   const { x, y, r, hue, t } = spray;
 
-  // flash inicial
   if (t < 0.2) {
     const ft = t / 0.2;
     const fo = (1 - ft) * 0.45;
@@ -180,7 +179,6 @@ function atualizarDesenharSpray(ctx: CanvasRenderingContext2D, spray: Spray): bo
     const gr = g.gr * (1 - t * 0.5);
     const h2 = (hue + g.hOff + 360) % 360;
 
-    // rastro
     g.trail.push({ x: gx, y: gy });
     if (g.trail.length > 6) g.trail.shift();
 
@@ -195,7 +193,6 @@ function atualizarDesenharSpray(ctx: CanvasRenderingContext2D, spray: Spray): bo
       ctx.fill();
     }
 
-    // gotinha principal
     if (gr > 0.3) {
       const grd = ctx.createRadialGradient(gx - gr * 0.3, gy - gr * 0.3, 0, gx, gy, gr);
       grd.addColorStop(0, `hsla(${h2},80%,95%,${op})`);
@@ -206,7 +203,6 @@ function atualizarDesenharSpray(ctx: CanvasRenderingContext2D, spray: Spray): bo
       ctx.fillStyle = grd;
       ctx.fill();
 
-      // reflexinho branco nas maiores
       if (gr > 2) {
         ctx.beginPath();
         ctx.arc(gx - gr * 0.25, gy - gr * 0.28, gr * 0.22, 0, Math.PI * 2);
@@ -249,6 +245,22 @@ export default function Bolhas() {
     window.addEventListener('resize', resize);
 
     const bolhas: Bolha[] = [];
+    const sprays: Spray[] = [];
+
+    function emCimaDeBolha(mx: number, my: number): boolean {
+      return bolhas.some(b => {
+        const dx = mx - b.x;
+        const dy = my - b.y;
+        return Math.sqrt(dx * dx + dy * dy) < b.r;
+      });
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      const rect = canvas!.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      canvas!.style.pointerEvents = emCimaDeBolha(mx, my) ? 'auto' : 'none';
+    }
 
     function handleClick(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect();
@@ -270,16 +282,11 @@ export default function Bolhas() {
         const b = bolhas[indiceMaisProximo];
         sprays.push(criarSpray(b.x, b.y, b.r, b.hue));
         bolhas[indiceMaisProximo] = criarBolha(largura, altura, true);
-      } else {
-        canvas!.style.pointerEvents = 'none';
-        const below = document.elementFromPoint(e.clientX, e.clientY);
-        if (below && below !== canvas) below.dispatchEvent(new MouseEvent('click', e));
-        canvas!.style.pointerEvents = 'auto';
       }
     }
 
+    canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('click', handleClick);
-    const sprays: Spray[] = [];
 
     function draw() {
       if (!ctx) return;
@@ -301,22 +308,26 @@ export default function Bolhas() {
       raf = requestAnimationFrame(draw);
     }
 
-    // espera o browser terminar o layout antes de iniciar
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       init();
       for (let i = 0; i < 40; i++) bolhas.push(criarBolha(largura, altura, false));
       for (let pass = 0; pass < 10; pass++) resolverColisoes(bolhas);
       draw();
-    });
+    }, 100);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('click', handleClick);
     };
   }, []);
 
   return (
-    <canvas ref={canvasRef} className="fixed inset-0 pointer-events-auto" style={{ zIndex: 1 }} />
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 bolhas-canvas"
+      style={{ pointerEvents: 'none' }}
+    />
   );
 }

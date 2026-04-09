@@ -10,7 +10,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Bolhas />
-      <div className="relative conteudo-app" style={{ zIndex: 2, pointerEvents: 'none' }}>
+      <div className="wave-bg" />
+      <div className="relative conteudo-app" style={{ zIndex: 2 }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/lobby" element={<Lobby />} />

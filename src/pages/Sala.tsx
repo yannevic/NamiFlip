@@ -72,7 +72,7 @@ export default function Sala() {
 
   if (!sala) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-transparent text-white flex items-center justify-center">
         <p className="text-gray-400">Carregando sala...</p>
       </div>
     );
@@ -81,7 +81,7 @@ export default function Sala() {
   const aguardando = sala.jogadores.length < 2;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-transparent text-white flex items-center justify-center p-4">
       <div className="flex flex-col items-center gap-8 w-full max-w-sm">
 
         {/* Código da sala */}
